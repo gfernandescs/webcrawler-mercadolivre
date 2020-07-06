@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const IndexController = require('./app/controllers/index-controller');
+const routeValidatorMiddleware = require('./app/middlewares/express/route-validator-middleware')
 
 const indexRoutes = Symbol('indexRoutes');
 
@@ -24,7 +25,11 @@ class Routes {
     }
 
     [indexRoutes]() {
-        this.routes.post('/search-products', (req, res, next) => IndexController.searchProducts(req, res, next));
+        this._routeValidator = async (req, res, next) => {
+            await routeValidatorMiddleware.validate(req, res, next);
+        };
+
+        this.routes.post('/search-products', [this._routeValidator], (req, res, next) => IndexController.searchProducts(req, res, next));
     }
 }
 
