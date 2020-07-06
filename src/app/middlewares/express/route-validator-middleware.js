@@ -6,10 +6,9 @@ class RouteValidatorMiddleware {
 
     async validate(req, res, next) {
         try {
-
             const schema = this._joi.object({
                 search: this._joi.string().required(),
-                limit: this._joi.number().required()
+                limit: this._joi.number().min(1).required()
             });
 
             const validate = schema.validate(req.body);

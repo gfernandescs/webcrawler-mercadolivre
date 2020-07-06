@@ -5,11 +5,6 @@ const fetchData = Symbol('fetchData');
 const findProducts = Symbol('findProducts');
 
 class IndexController {
-    constructor() {
-        this._products;
-        this._limit = 0;
-        this._productToSearch = "";
-    }
 
     async searchProducts(req, res, next) {
         try {
