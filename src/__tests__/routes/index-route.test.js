@@ -19,8 +19,8 @@ describe('Tests for IndexRoutes', () => {
             .end((err, res) => {
                 expect(res.statusCode).toEqual(200);
                 expect(res.body).toBeDefined();
-                expect(res.body.count).toEqual(30);
-                expect(res.body.products.length).toEqual(30);
+                expect(res.body.Response.count).toEqual(30);
+                expect(res.body.Response.products.length).toEqual(30);
 
                 done();
             });
@@ -39,8 +39,8 @@ describe('Tests for IndexRoutes', () => {
             .end((err, res) => {
                 expect(res.statusCode).toEqual(200);
                 expect(res.body).toBeDefined();
-                expect(res.body.count).toEqual(100);
-                expect(res.body.products.length).toEqual(100);
+                expect(res.body.Response.count).toEqual(100);
+                expect(res.body.Response.products.length).toEqual(100);
 
                 done();
             });
@@ -59,8 +59,8 @@ describe('Tests for IndexRoutes', () => {
             .end((err, res) => {
                 expect(res.statusCode).toEqual(200);
                 expect(res.body).toBeDefined();
-                expect(res.body.count).toEqual(400);
-                expect(res.body.products.length).toEqual(400);
+                expect(res.body.Response.count).toEqual(400);
+                expect(res.body.Response.products.length).toEqual(400);
 
                 done();
             });
@@ -71,8 +71,64 @@ describe('Tests for IndexRoutes', () => {
             .post('/search-products')
             .set('Accept', 'application/json')
             .send({
-                search: "",
                 limit: 400
+            })
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end((err, res) => {
+                expect(res.statusCode).toEqual(422);
+                expect(res.body).toBeDefined();
+                expect(res.body.message).toEqual('"search" is required');
+
+                done();
+            });
+    });
+
+    it('Should NOT receive 30 products when a required field is missing - limit', done => {
+        request(app)
+            .post('/search-products')
+            .set('Accept', 'application/json')
+            .send({
+                search: "Memoria RAM"
+            })
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end((err, res) => {
+                expect(res.statusCode).toEqual(422);
+                expect(res.body).toBeDefined();
+                expect(res.body.message).toEqual('"limit" is required');
+
+                done();
+            });
+    });
+
+    it('Should NOT receive 30 products when there is a field that is not allowed', done => {
+        request(app)
+            .post('/search-products')
+            .set('Accept', 'application/json')
+            .send({
+                search: "Memoria RAM",
+                limit: 400,
+                size: 100
+            })
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end((err, res) => {
+                expect(res.statusCode).toEqual(422);
+                expect(res.body).toBeDefined();
+                expect(res.body.message).toEqual('"size" is not allowed');
+
+                done();
+            });
+    });
+
+    it("Should NOT receive 30 products when the 'search' field is empty", done => {
+        request(app)
+            .post('/search-products')
+            .set('Accept', 'application/json')
+            .send({
+                search: "",
+                limit: 400,
             })
             .expect('Content-Type', /json/)
             .expect(200)
@@ -85,13 +141,13 @@ describe('Tests for IndexRoutes', () => {
             });
     });
 
-    it('Should NOT receive 30 products when a required field is missing - limit', done => {
+    it("Should NOT receive 30 products when the 'limit' field is a string", done => {
         request(app)
             .post('/search-products')
             .set('Accept', 'application/json')
             .send({
                 search: "Memoria RAM",
-                limit: ""
+                limit: "abc",
             })
             .expect('Content-Type', /json/)
             .expect(200)

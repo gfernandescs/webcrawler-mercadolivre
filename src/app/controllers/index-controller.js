@@ -20,8 +20,11 @@ class IndexController {
             console.log(`Search completed, ${this._products.length} products found\n`);
 
             res.status(200).json({
-                count: this._products.length,
-                products: this._products
+                Request: req.body,
+                Response: {
+                    count: this._products.length,
+                    products: this._products
+                }
             });
         } catch (e) {
             next(e);
