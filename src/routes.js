@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const IndexController = require('./app/controllers/index-controller');
-const routeValidatorMiddleware = require('./app/middlewares/express/route-validator-middleware')
+const routeValidatorMiddleware = require('./app/middlewares/express/route-validator-middleware');
 
 const indexRoutes = Symbol('indexRoutes');
 
