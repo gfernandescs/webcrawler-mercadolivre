@@ -56,11 +56,29 @@ class IndexController {
                 return false;
             }
 
-            const productName = $(e).find('.main-title').text().trim();
-            const productLink = $(e).find('.item__info-link').attr("href") || $(e).find('a').attr("href");
-            const productPrice = $(e).find('.item__price').text().trim();
-            const storeName = $(e).find('.item__brand').text().trim();
-            const productState = $(e).find('.item__status').text().trim();
+            const productName =
+                $(e).find('.main-title')
+                    .text()
+                    .trim();
+            const productLink =
+                $(e).find('.item__info-link')
+                    .attr("href")
+                || $(e).find('a')
+                    .attr("href");
+            const productPrice =
+                $(e).find('.item__price')
+                    .text()
+                    .replace("R$", "")
+                    .trim()
+                    .replace(" ", ".");
+            const storeName =
+                $(e).find('.item__brand')
+                    .text()
+                    .trim();
+            const productState =
+                $(e).find('.item__status')
+                    .text()
+                    .trim();
 
             this._products.push({
                 name: productName,
